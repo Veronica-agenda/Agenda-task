@@ -63,7 +63,8 @@ h3 .act{margin-left:auto;text-transform:none;letter-spacing:0}
 .quick{display:flex;gap:8px;align-items:center;background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:6px 6px 6px 14px;margin-bottom:6px}
 .quick input{flex:1;border:0;outline:0;font-size:16px;padding:8px 0;min-width:0;background:transparent}
 .quick .go{width:40px;height:40px;border-radius:10px;border:0;background:var(--navy);color:#fff;font-size:24px;line-height:1;cursor:pointer;flex:none}
-.qprev{display:flex;flex-wrap:wrap;gap:6px;min-height:22px;margin:0 4px 10px;font-size:13px}
+.qprev{display:flex;flex-wrap:wrap;gap:6px;margin:0 4px 10px;font-size:13px}
+.quick{margin-bottom:12px}
 .qprev .pill{background:#e9edf4;color:var(--navy)}
 .pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:600;background:#eef0f4;color:var(--muted);white-space:nowrap}
 .pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)}
@@ -325,7 +326,7 @@ h3 .cnt{background:var(--soft);color:var(--navy);font-family:"Nunito",sans-serif
 <main>
   <div id="qbox">
     <form class="quick" id="f-quick" autocomplete="off">
-      <input id="q" enterkeyhint="done" placeholder="Scrivi una task… es. «chiamare Scilla domani alle 10»" aria-label="Nuova task veloce">
+      <input id="q" enterkeyhint="done" placeholder="Aggiungi una task…" aria-label="Nuova task veloce">
       <button class="go" aria-label="Aggiungi">+</button>
     </form>
     <div class="qprev" id="qprev"></div>
@@ -752,7 +753,8 @@ function render(){
 function defDateForTab(){ return ui.tab === "elenco" ? null : ui.tab === "settimana" ? (ui.wk === monday(today()) ? today() : ui.wk) : today(); }
 function updatePreview(){
   const val = $("#q").value.trim(), p = $("#qprev");
-  if (!val){ p.innerHTML = `<span class="muted">Puoi scrivere: <b>domani</b>, <b>venerdì</b>, <b>15/12</b>, <b>alle 10</b>, <b>ogni lunedì</b>, <b>fine mese</b>, <b>#casa</b>, <b>!</b> per importante</span>`; return; }
+  p.hidden = !val;
+  if (!val){ p.innerHTML = ""; return; }
   const r = parseQuick(val, defDateForTab()), a = area(r.area || (ui.scope === "lavoro" ? "admin" : "privato"));
   p.innerHTML = [`<span class="pill">${r.d ? "📅 " + esc(cap(relDay(r.d))) : "Senza data"}</span>`, r.h ? `<span class="pill">⏰ ${esc(r.h)}</span>` : "", `<span class="pill" style="background:color-mix(in srgb,${a.c} 15%,#fff)"><span class="dot" style="background:${a.c}"></span>${esc(a.nome)}</span>`, r.pr ? `<span class="pill warn">★ importante</span>` : "", r.rep ? `<span class="pill">↻ ${esc(REP_LABEL(r.rep))}</span>` : ""].join("");
 }
